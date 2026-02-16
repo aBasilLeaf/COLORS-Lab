@@ -5,7 +5,8 @@
 	$searchResults = "";
 	$searchCount = 0;
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+	// Update with your database credentials
+	$conn = new mysqli("localhost", "YourUsername", "YourPassword", "COP4331");
 	if ($conn->connect_error) 
 	{
 		returnWithError( $conn->connect_error );

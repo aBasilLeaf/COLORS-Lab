@@ -1,0 +1,76 @@
+@startuml
+
+class Users {
+  +ID : INT
+  +FirstName : VARCHAR(50)
+  +LastName : VARCHAR(50)
+  +Login : VARCHAR(50)
+  +Password : VARCHAR(50)
+}
+
+class Colors {
+  +ID : INT
+  +Name : VARCHAR(50)
+  +UserID : INT
+}
+
+class Contacts {
+  +ID : INT
+  +FirstName : VARCHAR(50)
+  +LastName : VARCHAR(50)
+  +Phone : VARCHAR(50)
+  +Email : VARCHAR(50)
+  +UserID : INT
+}
+
+class LoginAPI {
+  +post(login: String, password: String) : JSON
+  -returnWithInfo(firstName, lastName, id) : JSON
+  -returnWithError(err) : JSON
+}
+
+class AddColorAPI {
+  +post(color: String, userId: int) : JSON
+  -returnWithError(err) : JSON
+}
+
+class SearchColorsAPI {
+  +post(search: String, userId: int) : JSON
+  -returnWithInfo(searchResults) : JSON
+  -returnWithError(err) : JSON
+}
+
+class Database {
+  +host: String
+  +dbName: String
+  +connect() : mysqli
+}
+
+class FrontendJS {
+  +urlBase : String
+  +userId : int
+  +firstName : String
+  +lastName : String
+  +doLogin() : void
+  +addColor() : void
+  +searchColor() : void
+  +doLogout() : void
+  +saveCookie() : void
+  +readCookie() : void
+}
+
+FrontendJS --> LoginAPI : POST {login, password}
+FrontendJS --> AddColorAPI : POST {color, userId}
+FrontendJS --> SearchColorsAPI : POST {search, userId}
+
+LoginAPI --> Database : SELECT ID, firstName,\nlastName FROM Users
+AddColorAPI --> Database : INSERT INTO Colors
+SearchColorsAPI --> Database : SELECT Name\nFROM Colors
+
+Database --> Users : reads/writes
+Database --> Colors : reads/writes
+Database --> Contacts : reads/writes
+
+Users "1" --> "0..*" Colors : owns
+Users "1" --> "0..*" Contacts : owns
+@enduml

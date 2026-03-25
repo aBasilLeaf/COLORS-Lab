@@ -1,0 +1,44 @@
+@startuml
+start
+
+:User opens index.html (Login Page);
+:User enters Login and Password;
+:POST to Login.php with {login, password};
+
+if (Login.php finds matching user?) then (yes)
+  :Return {id, firstName, lastName};
+  :Save firstName, lastName, userId to cookie\n(expires in 20 minutes);
+  :Redirect to color.html;
+  :Read cookie, restore session variables;
+
+  fork
+    :User enters color name;
+    :POST to AddColor.php with {color, userId};
+    :INSERT into Colors table;
+    :Display "Color has been added";
+  fork again
+    :User enters search term;
+    :POST to SearchColors.php with {search, userId};
+    :SELECT Name FROM Colors WHERE Name LIKE %search%\nAND UserID = userId;
+    if (Results found?) then (yes)
+      :Return {results: [colorName, ...]};
+      :Display color list in <p> tag;
+    else (no)
+      :Return error "No Records Found";
+      :Display error message;
+    endif
+  end fork
+
+  :User clicks Logout;
+  :Clear userId, firstName, lastName;
+  :Expire cookie;
+  :Redirect to index.html;
+
+else (no)
+  :Return {id: 0};
+  :Display "User/Password combination incorrect";
+  :User re-enters credentials;
+endif
+
+stop
+@enduml

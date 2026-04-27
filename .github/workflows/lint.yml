@@ -1,11 +1,11 @@
-name: Lint HTML, CSS, and JS
+name: Lint and Test
 
 on:
   push:
   pull_request:
 
 jobs:
-  lint:
+  lint-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +28,6 @@ jobs:
 
       - name: Lint JavaScript
         run: npx eslint "public/**/*.js"
+
+      - name: Run tests
+        run: npm test

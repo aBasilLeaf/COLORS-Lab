@@ -8,7 +8,8 @@ export default [
         window: "readonly",
         alert: "readonly",
         fetch: "readonly",
-        console: "readonly"
+        console: "readonly",
+        module: "readonly"
       }
     },
     rules: {
